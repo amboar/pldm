@@ -184,7 +184,7 @@ int main(int argc, char** argv)
 
     /* Create local socket. */
     int returnCode = 0;
-    int sockfd = socket(AF_UNIX, SOCK_SEQPACKET, 0);
+    int sockfd = socket(AF_UNIX, SOCK_DGRAM, 0);
     if (-1 == sockfd)
     {
         returnCode = -errno;
@@ -297,13 +297,13 @@ int main(int argc, char** argv)
 
     pldm::utils::CustomFD socketFd(sockfd);
 
-    struct sockaddr_un addr
+    struct sockaddr_mctp addr
     {};
-    addr.sun_family = AF_UNIX;
-    const char path[] = "\0mctp-mux";
-    memcpy(addr.sun_path, path, sizeof(path) - 1);
-    int result = connect(socketFd(), reinterpret_cast<struct sockaddr*>(&addr),
-                         sizeof(path) + sizeof(addr.sun_family) - 1);
+    addr.smctp_family = AF_MCTP;
+    addr.smctp_addr.s_addr = MCTP_ADDR_ANY;
+    addr.smctp_type = MCTP_MSG_TYPE_PLDM;
+    int result = bind(socketFd(), reinterpret_cast<struct sockaddr*>(&addr),
+            sizeof(addr));
     if (-1 == result)
     {
         returnCode = -errno;
@@ -333,36 +333,24 @@ int main(int argc, char** argv)
             return;
         }
 
-        // Outgoing message.
-        struct iovec iov[2]{};
-
-        // This structure contains the parameter information for the response
-        // message.
-        struct msghdr msg
-        {};
-
         int returnCode = 0;
-        ssize_t peekedLength = recv(fd, nullptr, 0, MSG_PEEK | MSG_TRUNC);
-        if (0 == peekedLength)
-        {
-            // MCTP daemon has closed the socket this daemon is connected to.
-            // This may or may not be an error scenario, in either case the
-            // recovery mechanism for this daemon is to restart, and hence exit
-            // the event loop, that will cause this daemon to exit with a
-            // failure code.
-            io.get_event().exit(0);
-        }
-        else if (peekedLength <= -1)
-        {
-            returnCode = -errno;
-            std::cerr << "recv system call failed, RC= " << returnCode << "\n";
-        }
         else
         {
-            std::vector<uint8_t> requestMsg(peekedLength);
-            auto recvDataLength = recv(
-                fd, static_cast<void*>(requestMsg.data()), peekedLength, 0);
-            if (recvDataLength == peekedLength)
+            struct sockaddr_mctp recvaddr
+            {};
+            /* Fix this */
+            std::vector<uint8_t> requestMsg(4096);
+            auto recvDataLength = recvfrom(
+                fd, static_cast<void*>(requestMsg.data()), requestMsg.size(), MSG_TRUNC,
+                reinterpret_cast<struct sockaddr*>(&recvaddr), sizeof(recvaddr));
+            if (recvDataLength > requestMsg.size())
+            {
+                std::cerr
+                    << "Failure to read peeked length packet. peekedLength= "
+                    << peekedLength << " recvDataLength=" << recvDataLength
+                    << "\n";
+            }
+            else
             {
                 FlightRecorder::GetInstance().saveRecord(requestMsg, false);
                 if (verbose)
@@ -388,14 +376,6 @@ int main(int argc, char** argv)
                             printBuffer(Tx, *response);
                         }
 
-                        iov[0].iov_base = &requestMsg[0];
-                        iov[0].iov_len =
-                            sizeof(requestMsg[0]) + sizeof(requestMsg[1]);
-                        iov[1].iov_base = (*response).data();
-                        iov[1].iov_len = (*response).size();
-
-                        msg.msg_iov = iov;
-                        msg.msg_iovlen = sizeof(iov) / sizeof(iov[0]);
                         if (currentSendbuffSize >= 0 &&
                             (size_t)currentSendbuffSize < (*response).size())
                         {
@@ -417,7 +397,11 @@ int main(int argc, char** argv)
                             }
                         }
 
-                        int result = sendmsg(fd, &msg, 0);
+                        recvaddr.smctp_tag &= ~MCTP_TAG_OWNER;
+                        int result = sendto(fd, static_cast<void*>(response.data()),
+                                response.size(), 0,
+                                reinterpret_cast<struct sockaddr*>(&recvaddr),
+                                sizeof(recvaddr));
                         if (-1 == result)
                         {
                             returnCode = -errno;
@@ -426,13 +410,6 @@ int main(int argc, char** argv)
                         }
                     }
                 }
-            }
-            else
-            {
-                std::cerr
-                    << "Failure to read peeked length packet. peekedLength= "
-                    << peekedLength << " recvDataLength=" << recvDataLength
-                    << "\n";
             }
         }
     };
