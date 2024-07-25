@@ -681,7 +681,7 @@ void HostPDRHandler::_processPDRRepoChgEvent(
 {
     deferredPDRRepoChgEvent.reset();
     this->sendPDRRepositoryChgEvent(
-        std::move(std::vector<uint8_t>(1, PLDM_PDR_ENTITY_ASSOCIATION)),
+        std::vector<uint8_t>(1, PLDM_PDR_ENTITY_ASSOCIATION),
         FORMAT_IS_PDR_HANDLES);
 }
 
