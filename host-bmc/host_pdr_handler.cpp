@@ -86,7 +86,7 @@ void updateContainerId(pldm_entity_association_tree* entityTree,
 }
 
 HostPDRHandler::HostPDRHandler(
-    int mctp_fd, uint8_t mctp_eid, sdeventplus::Event& event, pldm_pdr* repo,
+    int /* mctp_fd */, uint8_t mctp_eid, sdeventplus::Event& event, pldm_pdr* repo,
     const std::string& eventsJsonsDir, pldm_entity_association_tree* entityTree,
     pldm_entity_association_tree* bmcEntityTree,
     pldm::InstanceIdDb& instanceIdDb,
