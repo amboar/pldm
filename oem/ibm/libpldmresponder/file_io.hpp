@@ -430,7 +430,6 @@ class Handler : public CmdHandler
         vmiCertMatcher;    //!< Pointer to capture the interface added signal
                            //!< for new csr string
     /** @brief PLDM request handler */
-    pldm::requester::Handler<pldm::requester::Request>* handler;
     std::vector<std::unique_ptr<pldm::requester::oem_ibm::DbusToFileHandler>>
         dbusToFileHandlers;
 };
