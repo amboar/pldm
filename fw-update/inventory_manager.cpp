@@ -37,8 +37,7 @@ void InventoryManager::discoverFDs(const std::vector<mctp_eid_t>& eids)
         rc = handler.registerRequest(
             eid, instanceId, PLDM_FWUP, PLDM_QUERY_DEVICE_IDENTIFIERS,
             std::move(requestMsg),
-            std::move(std::bind_front(&InventoryManager::queryDeviceIdentifiers,
-                                      this)));
+            std::bind_front(&InventoryManager::queryDeviceIdentifiers, this));
         if (rc)
         {
             error(
