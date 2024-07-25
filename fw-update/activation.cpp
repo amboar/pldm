@@ -6,14 +6,14 @@ namespace pldm
 namespace fw_update
 {
 
-Activations Activation::activation(Activations value)
+ActivationIntf::Activations Activation::activation(ActivationIntf::Activations value)
 {
-    if (value == Activations::Activating)
+    if (value == ActivationIntf::Activations::Activating)
     {
         deleteImpl.reset();
         updateManager->activatePackage();
     }
-    else if (value == Activations::Active || value == Activations::Failed)
+    else if (value == ActivationIntf::Activations::Active || value == ActivationIntf::Activations::Failed)
     {
         if (!deleteImpl)
         {
