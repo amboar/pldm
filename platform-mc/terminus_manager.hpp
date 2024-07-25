@@ -51,7 +51,7 @@ class TerminusManager
     TerminusManager& operator=(TerminusManager&&) = delete;
     virtual ~TerminusManager() = default;
 
-    explicit TerminusManager(sdeventplus::Event& event,
+    explicit TerminusManager(sdeventplus::Event& /* event */,
                              RequesterHandler& handler,
                              pldm::InstanceIdDb& instanceIdDb,
                              TerminiMapper& termini, Manager* manager) :
