@@ -55,7 +55,6 @@ class TerminusManager
                              RequesterHandler& handler,
                              pldm::InstanceIdDb& instanceIdDb,
                              TerminiMapper& termini, Manager* manager) :
-        event(event),
         handler(handler), instanceIdDb(instanceIdDb), termini(termini),
         tidPool(tidPoolSize, false), manager(manager)
     {
@@ -205,10 +204,6 @@ class TerminusManager
      */
     exec::task<int> getPLDMCommands(pldm_tid_t tid, uint8_t type,
                                     bitfield8_t* supportedCmds);
-
-    /** @brief Reference to to PLDM daemon's main event loop.
-     */
-    sdeventplus::Event& event;
 
     /** @brief Reference to a Handler object that manages the request/response
      *         logic.
