@@ -41,7 +41,7 @@ constexpr auto attrValueTableFile = "attributeValueTable";
 
 BIOSConfig::BIOSConfig(
     const char* jsonDir, const char* tableDir, DBusHandler* const dbusHandler,
-    int fd, uint8_t eid, pldm::InstanceIdDb* instanceIdDb,
+    int /* fd */, uint8_t eid, pldm::InstanceIdDb* instanceIdDb,
     pldm::requester::Handler<pldm::requester::Request>* handler,
     pldm::responder::platform_config::Handler* platformConfigHandler,
     pldm::responder::bios::Callback requestPLDMServiceName) :
