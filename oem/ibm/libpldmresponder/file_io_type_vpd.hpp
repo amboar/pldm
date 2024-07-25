@@ -17,7 +17,7 @@ class keywordHandler : public FileHandler
   public:
     /** @brief Handler constructor
      */
-    keywordHandler(uint32_t fileHandle, uint16_t fileType) :
+    keywordHandler(uint32_t fileHandle, uint16_t /* fileType */) :
         FileHandler(fileHandle)
     {}
     virtual int writeFromMemory(uint32_t /*offset*/, uint32_t /*length*/,
