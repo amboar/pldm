@@ -94,7 +94,7 @@ HostPDRHandler::HostPDRHandler(
     mctp_fd(mctp_fd),
     mctp_eid(mctp_eid), event(event), repo(repo),
     stateSensorHandler(eventsJsonsDir), entityTree(entityTree),
-    bmcEntityTree(bmcEntityTree), instanceIdDb(instanceIdDb), handler(handler),
+    instanceIdDb(instanceIdDb), handler(handler),
     entityMaps(parseEntityMap(ENTITY_MAP_JSON)), oemUtilsHandler(nullptr)
 {
     mergedHostParents = false;
