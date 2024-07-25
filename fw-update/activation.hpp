@@ -101,24 +101,7 @@ class Activation : public ActivationIntf
 
     /** @brief Overriding Activation property setter function
      */
-    Activations activation(Activations value) override
-    {
-        if (value == Activations::Activating)
-        {
-            deleteImpl.reset();
-            updateManager->activatePackage();
-        }
-        else if (value == Activations::Active || value == Activations::Failed)
-        {
-            if (!deleteImpl)
-            {
-                deleteImpl = std::make_unique<Delete>(bus, objPath,
-                                                      updateManager);
-            }
-        }
-
-        return ActivationIntf::activation(value);
-    }
+    Activations activation(Activations value) override;
 
     /** @brief Overriding RequestedActivations property setter function
      */
