@@ -288,9 +288,6 @@ class HostPDRHandler
     /** @brief Pointer to BMC's and Host's entity association tree */
     pldm_entity_association_tree* entityTree;
 
-    /** @brief Pointer to BMC's entity association tree */
-    pldm_entity_association_tree* bmcEntityTree;
-
     /** @brief reference to Instance ID database object, used to obtain PLDM
      * instance IDs
      */
