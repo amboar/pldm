@@ -1,5 +1,6 @@
 #pragma once
 
+#include "fw-update/activation.hpp"
 #include "common/instance_id.hpp"
 #include "common/types.hpp"
 #include "device_updater.hpp"
@@ -29,9 +30,6 @@ using DeviceIDRecordOffset = size_t;
 using DeviceUpdaterInfo = std::pair<mctp_eid_t, DeviceIDRecordOffset>;
 using DeviceUpdaterInfos = std::vector<DeviceUpdaterInfo>;
 using TotalComponentUpdates = size_t;
-
-class Activation;
-class ActivationProgress;
 
 class UpdateManager
 {
