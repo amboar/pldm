@@ -170,8 +170,7 @@ void InventoryManager::sendGetFirmwareParametersRequest(mctp_eid_t eid)
     rc = handler.registerRequest(
         eid, instanceId, PLDM_FWUP, PLDM_GET_FIRMWARE_PARAMETERS,
         std::move(requestMsg),
-        std::move(
-            std::bind_front(&InventoryManager::getFirmwareParameters, this)));
+        std::bind_front(&InventoryManager::getFirmwareParameters, this));
     if (rc)
     {
         error(
