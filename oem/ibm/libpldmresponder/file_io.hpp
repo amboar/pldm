@@ -415,7 +415,6 @@ class Handler : public CmdHandler
 
   private:
     oem_platform::Handler* oemPlatformHandler;
-    int hostSockFd;
     using DBusInterfaceAdded = std::vector<std::pair<
         std::string,
         std::vector<std::pair<std::string, std::variant<std::string>>>>>;
