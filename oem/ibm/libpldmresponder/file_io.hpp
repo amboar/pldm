@@ -417,7 +417,6 @@ class Handler : public CmdHandler
     oem_platform::Handler* oemPlatformHandler;
     int hostSockFd;
     uint8_t hostEid;
-    pldm::InstanceIdDb* instanceIdDb;
     using DBusInterfaceAdded = std::vector<std::pair<
         std::string,
         std::vector<std::pair<std::string, std::variant<std::string>>>>>;
